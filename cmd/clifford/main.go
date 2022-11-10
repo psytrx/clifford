@@ -28,9 +28,11 @@ func main() {
 
 		x, y = nx, ny
 
-		ix := int(1024/2 + x*512/3)
-		iy := int(1024/2 + y*512/3)
-		img.Set(ix, iy, color.White)
+		if i > 32 {
+			ix := int(1024/2 + x*512/3)
+			iy := int(1024/2 + y*512/3)
+			img.Set(ix, iy, color.White)
+		}
 	}
 
 	f, err := os.Create("./output.jpg")
