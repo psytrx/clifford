@@ -11,7 +11,7 @@ type Attractor struct {
 }
 
 func NewAttractor(a, b, c, d float64) Attractor {
-	att := Attractor{
+	return Attractor{
 		A: a,
 		B: b,
 		C: c,
@@ -19,7 +19,6 @@ func NewAttractor(a, b, c, d float64) Attractor {
 		X: 0,
 		Y: 0,
 	}
-	return att
 }
 
 func NewRandomAttractor(min, max float64) Attractor {
