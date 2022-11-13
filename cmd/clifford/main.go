@@ -4,15 +4,17 @@ import (
 	"clifford/pkg/clifford"
 	"log"
 	"math"
+	"math/rand"
 	"os"
 	"runtime"
 	"runtime/pprof"
+	"time"
 )
 
 const (
 	DotsPerCm = 119 // 300 DPI
-	// Size      = 50 * DotsPerCm
-	Size  = 512
+	Size      = 50 * DotsPerCm
+	// Size  = 1600
 	Steps = 1e7
 )
 
@@ -26,6 +28,8 @@ func main() {
 		log.Fatal("could not start CPU profile: ", err)
 	}
 	defer pprof.StopCPUProfile()
+
+	rand.Seed(time.Now().UnixNano())
 
 	log.Println("fetching random gradient...")
 	gradHex, err := randomGradient()
