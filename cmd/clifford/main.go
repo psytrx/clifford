@@ -3,7 +3,6 @@ package main
 import (
 	"clifford/pkg/clifford"
 	"image"
-	"image/color"
 	"image/jpeg"
 	"log"
 	"math/rand"
@@ -16,6 +15,11 @@ func main() {
 
 	size := 512
 	steps := int(1e7)
+
+	grad, err := clifford.ParseGradient("#000000,#ff00ff")
+	if err != nil {
+		log.Fatalf("could not parse gradient: %s", err)
+	}
 
 	a, b, c, d := 1.7, 1.7, 0.6, 1.2
 	att := clifford.NewAttractor(a, b, c, d)
@@ -42,8 +46,7 @@ func main() {
 		}
 
 		f := float64(hits) / float64(hist.Limit)
-		int := uint8(255 * f)
-		c := color.RGBA{int, int, int, 255}
+		c := grad.Interp(f)
 
 		ix := i % size
 		iy := (i / size)
