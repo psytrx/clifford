@@ -1,6 +1,7 @@
 package clifford
 
 import (
+	"fmt"
 	"math"
 	"math/rand"
 )
@@ -39,6 +40,10 @@ func (att *Attractor) Advance() {
 	nx := math.Sin(att.A*att.Y) + att.C*math.Cos(att.A*att.X)
 	ny := math.Sin(att.B*att.X) + att.D*math.Cos(att.B*att.Y)
 	att.X, att.Y = nx, ny
+}
+
+func (att Attractor) String() string {
+	return fmt.Sprintf("a, b, c, d := %f, %f, %f, %f", att.A, att.B, att.C, att.D)
 }
 
 func uniform(min, max float64) float64 {

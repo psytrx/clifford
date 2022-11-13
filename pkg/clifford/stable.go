@@ -1,6 +1,6 @@
 package clifford
 
-func FindStableAttractor(min, max float64) Attractor {
+func FindStableAttractor(min, max float64, threshold uint) Attractor {
 	for {
 		att := NewRandomAttractor(min, max)
 
@@ -15,7 +15,7 @@ func FindStableAttractor(min, max float64) Attractor {
 			hist.Inc(att.X, att.Y)
 		}
 
-		if 10*hist.Limit > uint(n) {
+		if threshold*hist.Limit > uint(n) {
 			continue
 		}
 		return att

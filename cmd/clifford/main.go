@@ -37,7 +37,8 @@ func main() {
 		log.Fatalf("could not get random gradient: %s", err)
 	}
 
-	att := clifford.FindStableAttractor(-2, 2)
+	att := clifford.FindStableAttractor(-2, 2, 100)
+	log.Println(att)
 
 	log.Println("stabilizing attractor...")
 	for i := 0; i < 128; i++ {
