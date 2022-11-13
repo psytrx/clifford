@@ -2,6 +2,8 @@ package main
 
 import (
 	"clifford/pkg/clifford"
+	"fmt"
+	"image"
 	"image/jpeg"
 	"log"
 	"math/rand"
@@ -36,14 +38,21 @@ func main() {
 	}
 
 	img := clifford.RenderHistogram(hist, size, grad)
+	if err := writeImage("./output.jpg", img); err != nil {
+		log.Fatalf("could not write image: %s", err)
+	}
+}
 
-	f, err := os.Create("./output.jpg")
+func writeImage(filename string, img image.Image) error {
+	f, err := os.Create(filename)
 	if err != nil {
-		log.Fatalf("could not create output file: %v", err)
+		return fmt.Errorf("could not create output file: %v", err)
 	}
 	defer f.Close()
 
 	if err := jpeg.Encode(f, img, &jpeg.Options{Quality: 100}); err != nil {
-		log.Fatalf("could not encode JPEG: %v", err)
+		return fmt.Errorf("could not encode JPEG: %v", err)
 	}
+
+	return nil
 }
