@@ -30,13 +30,10 @@ func NewRandomAttractor(min, max float64) Attractor {
 	return NewAttractor(a, b, c, d)
 }
 
-func (att Attractor) Bounds() Bounds {
+func (att Attractor) Bounds() (float64, float64) {
 	hw := 1 + math.Abs(att.C)
 	hh := 1 + math.Abs(att.D)
-	return Bounds{
-		Width:  2 * hw,
-		Height: 2 * hh,
-	}
+	return 2 * hw, 2 * hh
 }
 
 func (att *Attractor) Advance() {

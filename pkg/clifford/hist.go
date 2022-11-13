@@ -3,21 +3,20 @@ package clifford
 import "math"
 
 type Histogram struct {
-	n      int
-	bounds Bounds
-	scale  float64
-	Bins   []int
-	Limit  int
+	n     int
+	scale float64
+	Bins  []int
+	Limit int
 }
 
-func NewHistogram(n int, bounds Bounds) Histogram {
-	scale := float64(n) / math.Max(bounds.Width, bounds.Height)
+func NewHistogram(n int, att Attractor) Histogram {
+	width, height := att.Bounds()
+	scale := float64(n) / math.Max(width, height)
 	return Histogram{
-		n:      n,
-		bounds: bounds,
-		scale:  scale,
-		Bins:   make([]int, n*n),
-		Limit:  0,
+		n:     n,
+		scale: scale,
+		Bins:  make([]int, n*n),
+		Limit: 0,
 	}
 }
 
