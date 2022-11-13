@@ -6,7 +6,5 @@ A Go package for discovering, generating and drawing [Clifford Attractors](http:
 
 ![Example program output](./output/03.jpg)
 
-![Example program output](./output/02.jpg)
-
-![Example program output](./output/01.jpg)
+[More examples](/output/examples.md)
 
