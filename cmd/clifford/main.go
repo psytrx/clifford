@@ -4,11 +4,9 @@ import (
 	"clifford/pkg/clifford"
 	"log"
 	"math"
-	"math/rand"
 	"os"
 	"runtime"
 	"runtime/pprof"
-	"time"
 )
 
 const (
@@ -29,14 +27,19 @@ func main() {
 	}
 	defer pprof.StopCPUProfile()
 
-	rand.Seed(time.Now().UnixNano())
-
 	log.Println("fetching random gradient...")
-	grad, err := randomGradient()
+	gradHex, err := randomGradient()
 	if err != nil {
 		log.Fatalf("could not get random gradient: %s", err)
 	}
+	log.Println(gradHex)
 
+	grad, err := clifford.GradientHexSlice(gradHex)
+	if err != nil {
+		log.Fatalf("could not create gradient from slice: %s", err)
+	}
+
+	log.Println("searching stable attractor...")
 	att := clifford.FindStableAttractor(-2, 2, 100)
 	log.Println(att)
 
