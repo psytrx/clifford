@@ -7,17 +7,32 @@ import (
 	"net/http"
 )
 
-func GetRandomGradient() ([]string, error) {
-	reqPayload := reqPayload{
-		NumColors:   6,
-		Temperature: 1.3,
-		NumResults:  1,
-		Adjacency:   []string{"0", "35", "45", "55", "65", "75", "35", "0", "15", "25", "35", "45", "45", "15", "0", "15", "25", "35", "55", "25", "15", "0", "15", "25", "65", "35", "25", "15", "0", "15", "75", "45", "35", "25", "15", "0"},
-		Palette:     []string{"-", "-", "-", "-", "-", "-"},
-		Mode:        "transformer",
-	}
+const (
+	ModeTransformer = "transformer"
+	ModeDiffusion   = "diffusion"
+	ModeRandom      = "random"
+)
 
-	reqJson, err := json.Marshal(reqPayload)
+type Mode string
+
+type Payload struct {
+	NumColors   int      `json:"num_colors"`
+	Temperature float64  `json:"temperature"`
+	NumResults  int      `json:"num_results"`
+	Adjacency   []string `json:"adjacency"`
+	Palette     []string `json:"palette"`
+	Mode        Mode     `json:"mode"`
+}
+
+type Response struct {
+	Results []struct {
+		Palette []string `json:"palette"`
+		Score   float64  `json:"score"`
+	} `json:"results"`
+}
+
+func Colors(payload Payload) (*Response, error) {
+	reqJson, err := json.Marshal(payload)
 	if err != nil {
 		return nil, fmt.Errorf("could not marshal request payload: %w", err)
 	}
@@ -27,10 +42,10 @@ func GetRandomGradient() ([]string, error) {
 		return nil, fmt.Errorf("could not post HTTP request: %w", err)
 	}
 
-	var resBody respData
-	if err := json.NewDecoder(resp.Body).Decode(&resBody); err != nil {
+	var response Response
+	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("could not decode response body: %w", err)
 	}
 
-	return resBody.Results[0].Palette, nil
+	return &response, nil
 }
