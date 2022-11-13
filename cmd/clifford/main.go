@@ -1,11 +1,11 @@
 package main
 
 import (
+	"clifford/pkg/clifford"
 	"image"
 	"image/color"
 	"image/jpeg"
 	"log"
-	"math"
 	"math/rand"
 	"os"
 	"time"
@@ -19,18 +19,19 @@ func main() {
 	c := -2 + 4*rand.Float64()
 	d := -2 + 4*rand.Float64()
 
-	x, y := 0.0, 0.0
+	att := clifford.NewAttractor(a, b, c, d)
+	// stabilize
+	for i := 0; i < 32; i++ {
+		att.Advance()
+	}
 
 	img := image.NewRGBA(image.Rect(0, 0, 1024, 1024))
 	for i := 0; i < 1e6; i++ {
-		nx := math.Sin(a*y) + c*math.Cos(a*x)
-		ny := math.Sin(b*x) + d*math.Cos(b*y)
-
-		x, y = nx, ny
+		att.Advance()
 
 		if i > 32 {
-			ix := int(1024/2 + x*512/3)
-			iy := int(1024/2 + y*512/3)
+			ix := int(1024/2 + att.X*512/3)
+			iy := int(1024/2 + att.Y*512/3)
 			img.Set(ix, iy, color.White)
 		}
 	}
