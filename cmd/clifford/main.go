@@ -40,7 +40,7 @@ func main() {
 	}
 
 	log.Println("searching stable attractor...")
-	att := clifford.FindStableAttractor(-2, 2, 100)
+	att := clifford.StableAttractor(-2, 2, 100)
 	log.Println(att)
 
 	log.Println("stabilizing attractor...")

@@ -1,6 +1,6 @@
 package clifford
 
-func FindStableAttractor(min, max float64, threshold uint) Attractor {
+func StableAttractor(min, max float64, threshold uint) Attractor {
 	for {
 		att := NewRandomAttractor(min, max)
 
