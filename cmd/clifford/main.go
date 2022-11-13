@@ -2,6 +2,7 @@ package main
 
 import (
 	"clifford/pkg/clifford"
+	"clifford/pkg/huemint"
 	"fmt"
 	"image"
 	"image/jpeg"
@@ -18,7 +19,13 @@ func main() {
 	stabSteps := 1e4
 	steps := int(1e7)
 
-	grad, err := clifford.ParseGradient("#000000,#ff0000,#00ff00,#0000ff,#ffffff")
+	log.Println("fetching random gradient...")
+	gradHex, err := huemint.GetRandomGradient()
+	if err != nil {
+		log.Fatalf("could not fetch random gradient: %s", err)
+	}
+
+	grad, err := clifford.GradientFromSlice(gradHex)
 	if err != nil {
 		log.Fatalf("could not parse gradient: %s", err)
 	}
@@ -27,17 +34,22 @@ func main() {
 	att := clifford.NewAttractor(a, b, c, d)
 
 	// stabilize
+	log.Println("stabilizing attractor...")
 	for i := 0; i < int(stabSteps); i++ {
 		att.Advance()
 	}
 
+	log.Println("building histogram...")
 	hist := clifford.NewHistogram(size, att.Bounds())
 	for i := 0; i < steps; i++ {
 		att.Advance()
 		hist.Inc(att.X, att.Y)
 	}
 
+	log.Println("rendering histogram...")
 	img := clifford.RenderHistogram(hist, size, grad)
+
+	log.Println("writing output image...")
 	if err := writeImage("./output.jpg", img); err != nil {
 		log.Fatalf("could not write image: %s", err)
 	}

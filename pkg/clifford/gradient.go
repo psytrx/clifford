@@ -14,12 +14,7 @@ type GradientRec struct {
 
 type Gradient []GradientRec
 
-func ParseGradient(s string) (Gradient, error) {
-	tokens := strings.Split(s, ",")
-	if len(tokens) < 2 {
-		return nil, fmt.Errorf("invalid gradient, requires at least 2 comma-separated, hex-formatted colors")
-	}
-
+func GradientFromSlice(tokens []string) (Gradient, error) {
 	grad := make(Gradient, len(tokens))
 	step := 1 / float64(len(tokens)-1)
 	for i, tok := range tokens {
@@ -33,8 +28,15 @@ func ParseGradient(s string) (Gradient, error) {
 			Pos: float64(i) * step,
 		}
 	}
-
 	return grad, nil
+}
+
+func ParseGradient(s string) (Gradient, error) {
+	tokens := strings.Split(s, ",")
+	if len(tokens) < 2 {
+		return nil, fmt.Errorf("invalid gradient, requires at least 2 comma-separated, hex-formatted colors")
+	}
+	return GradientFromSlice(tokens)
 }
 
 func (g Gradient) Interp(t float64) colorful.Color {
