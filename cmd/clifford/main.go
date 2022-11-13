@@ -5,6 +5,7 @@ import (
 	"image"
 	"image/jpeg"
 	"log"
+	"math"
 	"math/rand"
 	"os"
 	"time"
@@ -16,7 +17,7 @@ func main() {
 	size := 512
 	steps := int(1e7)
 
-	grad, err := clifford.ParseGradient("#000000,#ff00ff")
+	grad, err := clifford.ParseGradient("#000000,#ff0000,#00ff00,#0000ff,#ffffff")
 	if err != nil {
 		log.Fatalf("could not parse gradient: %s", err)
 	}
@@ -41,12 +42,10 @@ func main() {
 	img := image.NewRGBA(image.Rect(0, 0, size, size))
 	for i := 0; i < size*size; i++ {
 		hits := hist.Bins[i]
-		if hits < 1 {
-			continue
-		}
 
 		f := float64(hits) / float64(hist.Limit)
-		c := grad.Interp(f)
+		ff := math.Log(1 + f*(math.E-1))
+		c := grad.Interp(ff)
 
 		ix := i % size
 		iy := (i / size)

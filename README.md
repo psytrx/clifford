@@ -4,7 +4,9 @@ A Go package for discovering, generating and drawing [Clifford Attractors](http:
 
 ## Example outputs
 
-![Example program output](./output/01.jpg)
+![Example program output](./output/03.jpg)
 
 ![Example program output](./output/02.jpg)
+
+![Example program output](./output/01.jpg)
 
