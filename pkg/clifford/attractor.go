@@ -1,6 +1,9 @@
 package clifford
 
-import "math"
+import (
+	"math"
+	"math/rand"
+)
 
 type Attractor struct {
 	A, B, C, D float64
@@ -19,8 +22,20 @@ func NewAttractor(a, b, c, d float64) Attractor {
 	return att
 }
 
+func NewRandomAttractor(min, max float64) Attractor {
+	a := uniform(min, max)
+	b := uniform(min, max)
+	c := uniform(min, max)
+	d := uniform(min, max)
+	return NewAttractor(a, b, c, d)
+}
+
 func (att *Attractor) Advance() {
 	nx := math.Sin(att.A*att.Y) + att.C*math.Cos(att.A*att.X)
 	ny := math.Sin(att.B*att.X) + att.D*math.Cos(att.B*att.Y)
 	att.X, att.Y = nx, ny
+}
+
+func uniform(min, max float64) float64 {
+	return min + (max-min)*rand.Float64()
 }

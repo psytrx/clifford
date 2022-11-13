@@ -14,14 +14,9 @@ import (
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
-	a := -2 + 4*rand.Float64()
-	b := -2 + 4*rand.Float64()
-	c := -2 + 4*rand.Float64()
-	d := -2 + 4*rand.Float64()
-
-	att := clifford.NewAttractor(a, b, c, d)
+	att := clifford.NewRandomAttractor(-2, 2)
 	// stabilize
-	for i := 0; i < 32; i++ {
+	for i := 0; i < 1e6; i++ {
 		att.Advance()
 	}
 
