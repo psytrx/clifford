@@ -5,17 +5,17 @@ import "math"
 type Histogram struct {
 	n     int
 	scale float64
-	Bins  []int
-	Limit int
+	Bins  []uint
+	Limit uint
 }
 
-func NewHistogram(n int, att Attractor) Histogram {
+func NewHistogram(n int, scale float64, att Attractor) Histogram {
 	width, height := att.Bounds()
-	scale := float64(n) / math.Max(width, height)
+	s := scale * float64(n) / math.Max(width, height)
 	return Histogram{
 		n:     n,
-		scale: scale,
-		Bins:  make([]int, n*n),
+		scale: s,
+		Bins:  make([]uint, n*n),
 		Limit: 0,
 	}
 }
@@ -28,7 +28,7 @@ func (hist *Histogram) Inc(x, y float64) {
 	hist.Limit = max(hist.Limit, hist.Bins[idx])
 }
 
-func max(a, b int) int {
+func max(a, b uint) uint {
 	if a >= b {
 		return a
 	}

@@ -3,6 +3,7 @@ package main
 import (
 	"clifford/pkg/clifford"
 	"log"
+	"math"
 	"math/rand"
 	"time"
 )
@@ -29,7 +30,7 @@ func main() {
 	}
 
 	log.Println("building histogram...")
-	hist := clifford.NewHistogram(size, att)
+	hist := clifford.NewHistogram(size, math.Phi/2, att)
 	for i := 0; i < steps; i++ {
 		att.Advance()
 		hist.Inc(att.X, att.Y)
