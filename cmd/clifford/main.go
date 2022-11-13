@@ -14,7 +14,11 @@ import (
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
-	att := clifford.NewRandomAttractor(-2, 2)
+	a, b, c, d := 1.7, 1.7, 0.6, 1.2
+	att := clifford.NewAttractor(a, b, c, d)
+	// att := clifford.NewRandomAttractor(-2, 2)
+	log.Println(att)
+
 	// stabilize
 	for i := 0; i < 1e6; i++ {
 		att.Advance()
