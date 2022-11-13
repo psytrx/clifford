@@ -22,7 +22,12 @@ func NewHistogram(n int, scale float64, att Attractor) Histogram {
 
 func (hist *Histogram) Inc(x, y float64) {
 	ix := int(float64(hist.n)/2 + x*hist.scale)
-	iy := int(float64(hist.n/2) + y*hist.scale)
+	iy := int(float64(hist.n)/2 + y*hist.scale)
+
+	if ix < 0 || ix >= hist.n || iy < 0 || iy >= hist.n {
+		return
+	}
+
 	idx := ix + iy*hist.n
 	hist.Bins[idx]++
 	hist.Limit = max(hist.Limit, hist.Bins[idx])
