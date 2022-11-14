@@ -11,7 +11,8 @@ func RenderHistogram(hist Histogram, size int, grad *Gradient) image.Image {
 		hits := hist.Bins[i]
 
 		f := float64(hits) / float64(hist.Limit)
-		ff := math.Log(1 + f*(math.E-1))
+		// ff := math.Log(1 + f*(math.E-1))
+		ff := 1 - math.Pow(1-f, 5) // ease-out-quint
 		c := grad.Interp(ff)
 
 		ix := i % size
