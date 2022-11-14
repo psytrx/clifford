@@ -46,13 +46,23 @@ func GradientHexString(s string) (*Gradient, error) {
 }
 
 func (g Gradient) Interp(t float64) colorful.Color {
+	cached, ok := g.cache[t]
+	if ok {
+		return cached
+	}
+
 	for i := 0; i < len(g.table)-1; i++ {
 		c1 := g.table[i]
 		c2 := g.table[i+1]
 		if c1.Pos <= t && t <= c2.Pos {
 			t := (t - c1.Pos) / (c2.Pos - c1.Pos)
-			return c1.Col.BlendLuv(c2.Col, t).Clamped()
+			res := c1.Col.BlendLuv(c2.Col, t).Clamped()
+			g.cache[t] = res
+			return res
 		}
 	}
-	return g.table[len(g.table)-1].Col
+
+	res := g.table[len(g.table)-1].Col
+	g.cache[t] = res
+	return res
 }
