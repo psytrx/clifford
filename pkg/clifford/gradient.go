@@ -12,25 +12,32 @@ type GradientRec struct {
 	Pos float64
 }
 
-type Gradient []GradientRec
+type Gradient struct {
+	table []GradientRec
+	cache map[float64]colorful.Color
+}
 
-func GradientHexSlice(tokens []string) (Gradient, error) {
-	grad := make(Gradient, len(tokens))
+func GradientHexSlice(tokens []string) (*Gradient, error) {
+	table := make([]GradientRec, len(tokens))
 	step := 1 / float64(len(tokens)-1)
 	for i, tok := range tokens {
 		c, err := colorful.Hex(tok)
 		if err != nil {
 			return nil, fmt.Errorf("invalid hex color: %w", err)
 		}
-		grad[i] = GradientRec{
+		table[i] = GradientRec{
 			Col: c,
 			Pos: float64(i) * step,
 		}
 	}
-	return grad, nil
+	grad := Gradient{
+		table: table,
+		cache: make(map[float64]colorful.Color),
+	}
+	return &grad, nil
 }
 
-func GradientHexString(s string) (Gradient, error) {
+func GradientHexString(s string) (*Gradient, error) {
 	tokens := strings.Split(s, ",")
 	if len(tokens) < 2 {
 		return nil, fmt.Errorf("invalid gradient, requires at least 2 comma-separated, hex-formatted colors")
@@ -39,13 +46,13 @@ func GradientHexString(s string) (Gradient, error) {
 }
 
 func (g Gradient) Interp(t float64) colorful.Color {
-	for i := 0; i < len(g)-1; i++ {
-		c1 := g[i]
-		c2 := g[i+1]
+	for i := 0; i < len(g.table)-1; i++ {
+		c1 := g.table[i]
+		c2 := g.table[i+1]
 		if c1.Pos <= t && t <= c2.Pos {
 			t := (t - c1.Pos) / (c2.Pos - c1.Pos)
 			return c1.Col.BlendLuv(c2.Col, t).Clamped()
 		}
 	}
-	return g[len(g)-1].Col
+	return g.table[len(g.table)-1].Col
 }

@@ -5,7 +5,7 @@ import (
 	"math"
 )
 
-func RenderHistogram(hist Histogram, size int, grad Gradient) image.Image {
+func RenderHistogram(hist Histogram, size int, grad *Gradient) image.Image {
 	img := image.NewRGBA(image.Rect(0, 0, size, size))
 	for i := 0; i < size*size; i++ {
 		hits := hist.Bins[i]
