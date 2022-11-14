@@ -44,7 +44,7 @@ func (g Gradient) Interp(t float64) colorful.Color {
 		c2 := g[i+1]
 		if c1.Pos <= t && t <= c2.Pos {
 			t := (t - c1.Pos) / (c2.Pos - c1.Pos)
-			return c1.Col.BlendHcl(c2.Col, t).Clamped()
+			return c1.Col.BlendLuv(c2.Col, t).Clamped()
 		}
 	}
 	return g[len(g)-1].Col
