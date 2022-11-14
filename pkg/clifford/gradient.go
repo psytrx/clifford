@@ -2,6 +2,7 @@ package clifford
 
 import (
 	"fmt"
+	"math"
 	"strings"
 
 	"github.com/lucasb-eyer/go-colorful"
@@ -46,6 +47,9 @@ func GradientHexString(s string) (*Gradient, error) {
 }
 
 func (g Gradient) Interp(t float64) colorful.Color {
+	prec := 1e6
+	t = math.Round(t*prec) / prec
+
 	cached, ok := g.cache[t]
 	if ok {
 		return cached
