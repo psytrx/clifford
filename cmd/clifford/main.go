@@ -8,12 +8,13 @@ import (
 	"os"
 	"runtime"
 	"runtime/pprof"
+	"strings"
 	"time"
 )
 
 const (
-	DotsPerCm = 119 // 300 DPI
-	Size      = 50 * DotsPerCm
+	DotsPerCm = 237 // 600 DPI
+	Size      = 25 * DotsPerCm
 	// Size  = 1600
 	Interval = 2 * time.Second
 	Passes   = 8
@@ -33,11 +34,12 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 
 	log.Println("fetching random gradient...")
+
 	gradHex, err := randomGradient()
 	if err != nil {
 		log.Fatalf("could not get random gradient: %s", err)
 	}
-	log.Println(gradHex)
+	log.Println(strings.Join(gradHex, ","))
 
 	grad, err := clifford.GradientHexSlice(gradHex)
 	if err != nil {
