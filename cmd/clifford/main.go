@@ -15,7 +15,8 @@ const (
 	DotsPerCm = 119 // 300 DPI
 	Size      = 50 * DotsPerCm
 	// Size  = 1600
-	Steps = 1e7
+	Interval = 2 * time.Second
+	Passes   = 8
 )
 
 func main() {
@@ -54,17 +55,24 @@ func main() {
 
 	log.Println("building histogram...")
 	hist := clifford.NewHistogram(Size, math.Phi/2, att)
-	for i := 0; i < Steps; i++ {
-		att.Advance()
-		hist.Inc(att.X, att.Y)
-	}
 
-	log.Println("rendering histogram...")
-	img := clifford.RenderHistogram(hist, Size, grad)
+	traces := uint(0)
+	for p := 0; p < Passes; p++ {
+		t0 := time.Now()
+		for time.Since(t0) < Interval {
+			att.Advance()
+			hist.Inc(att.X, att.Y)
+			traces++
+		}
+		log.Printf("pass %d, traced %d pixels", p+1, traces)
 
-	log.Println("writing output image...")
-	if err := writeImage("./output.jpg", img); err != nil {
-		log.Fatalf("could not write image: %s", err)
+		log.Println("rendering histogram...")
+		img := clifford.RenderHistogram(hist, Size, grad)
+
+		log.Println("writing output image...")
+		if err := writeImage("./output.jpg", img); err != nil {
+			log.Fatalf("could not write image: %s", err)
+		}
 	}
 
 	fMemProf, err := os.Create("./mem.prof")

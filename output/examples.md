@@ -1,5 +1,7 @@
 # Example Output
 
+[High-Res 01](./hr-01.jpg)
+
 ![](./10.jpg)
 
 ![](./09.jpg)
